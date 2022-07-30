@@ -3,8 +3,11 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <style> circle {fill: lightblue; stroke: black;} </style>
 <body onload='init()'>
-<svg width=300 height=300>
-</svg>
+<link rel="stylesheet" href="styles.css">
+
+
+
+
 <script>
 async function init() { 
     // set the dimensions and margins of the graph
@@ -74,6 +77,102 @@ console.log(map);
                 svg.append("g")
                     .call(y_axis);
 
+                    var tooltip = d3.select("svg")
+    .append("div")
+    .style("opacity", 1)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("padding", "10px");
+
+
+    var mouseover = function(d) {
+    tooltip
+      .style("opacity", 1)
+    
+  }
+
+  var mousemove = function(d) {
+    console.log(this);
+    document.getElementById("cityMPG").innerText = this.attributes[3].nodeValue;
+    document.getElementById("highwayMPG").innerText = this.attributes[4].nodeValue;
+    document.getElementById("engineCylinder").innerText = this.attributes[5].nodeValue;
+    //document.getElementById("highwayMPG").innerText.this.attributes
+
+    tooltip
+      .html("The exact value of<br>the Ground Living area is: ")
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+    
+  }
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var mouseleave = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }
+
+  var mouseoverE = function(d) {
+    tooltip
+      .style("opacity", 1)
+    
+  }
+
+  var mousemoveE = function(d) {
+    console.log(this);
+    document.getElementById("cityMPGE").innerText = this.attributes[3].nodeValue;
+    document.getElementById("highwayMPGE").innerText = this.attributes[4].nodeValue;
+    document.getElementById("engineCylinderE").innerText = this.attributes[5].nodeValue;
+    //document.getElementById("highwayMPG").innerText.this.attributes
+
+    tooltip
+      .html("The exact value of<br>the Ground Living area is: ")
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+    
+  }
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var mouseleaveE = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }
+
+
+  var mouseoverA = function(d) {
+    tooltip
+      .style("opacity", 1)
+    
+  }
+
+  var mousemoveA = function(d) {
+    console.log(this);
+    document.getElementById("cityMPGA").innerText = this.attributes[3].nodeValue;
+    document.getElementById("highwayMPGA").innerText = this.attributes[4].nodeValue;
+    document.getElementById("engineCylinderA").innerText = this.attributes[5].nodeValue;
+    document.getElementById("fuel").innerText = this.attributes[6].nodeValue;
+    document.getElementById("make").innerText = this.attributes[7].nodeValue;
+    //document.getElementById("highwayMPG").innerText.this.attributes
+
+    tooltip
+      .html("The exact value of<br>the Ground Living area is: ")
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+    
+  }
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var mouseleaveA = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }
+
+
                 // now append circle for each record in svg
                map.forEach((data) => {
                          svg.append('g')
@@ -81,8 +180,288 @@ console.log(map);
                         .attr("cx", x(data.AverageCityMPG))
                         .attr("cy", y(data.AverageHighwayMPG))
                         .attr("r", 2 + data.EngineCylinder)
+                        .attr("averageCityMPG", data.AverageCityMPG)
+                        .attr("averageHighwayMPG", data.AverageHighwayMPG)
+                        .attr("engineCylinders", data.EngineCylinder )
+                        
+                        
+                })
+
+                var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+                    width = 200,
+                    height = 200;
+
+                // select svg element
+                var svg2 = d3.select("#secondVis")
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+                // Add X axis
+                var x = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([0, width]);
+
+                var x_axis = d3.axisBottom(x)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format("~s"));   //setting tick format
+
+                // adding x axis to svg
+                svg2.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(x_axis);
+
+                // Add Y axis
+                var y = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([height, 0]);
+
+                var y_axis = d3.axisLeft(y)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format('~s'));   //setting tick format
+
+                //adding y axis to svg
+                svg2.append("g")
+                    .call(y_axis);
+
+                    var tooltip = d3.select("#secondVis")
+    .append("div")
+    .style("opacity", 1)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("padding", "10px");
+
+
+
+                // now append circle for each record in svg
+               map.forEach((data) => {
+                if (data.Fuel === "Gasoline")
+                         svg2.append('g')
+                        .append("circle")
+                        .attr("cx", x(data.AverageCityMPG))
+                        .attr("cy", y(data.AverageHighwayMPG))
+                        .attr("r", 2 + data.EngineCylinder)
+                        .attr("averageCityMPG", data.AverageCityMPG)
+                        .attr("averageHighwayMPG", data.AverageHighwayMPG)
+                        .attr("engineCylinders", data.EngineCylinder )
+                        .on("mouseover", mouseover)
+                        .on("mousemove", mousemove)
+                        .on("mouseleave", mouseleave)
+                        
+                })
+
+
+
+                 // now append circle for each record in svg
+               map.forEach((data) => {
+                         svg.append('g')
+                        .append("circle")
+                        .attr("cx", x(data.AverageCityMPG))
+                        .attr("cy", y(data.AverageHighwayMPG))
+                        .attr("r", 2 + data.EngineCylinder)
+                        .attr("averageCityMPG", data.AverageCityMPG)
+                        .attr("averageHighwayMPG", data.AverageHighwayMPG)
+                        .attr("engineCylinders", data.EngineCylinder )
+                        
+                        
+                })
+
+                var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+                    width = 200,
+                    height = 200;
+
+                // select svg element
+                var svg3 = d3.select("#thirdVis")
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+                // Add X axis
+                var x = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([0, width]);
+
+                var x_axis = d3.axisBottom(x)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format("~s"));   //setting tick format
+
+                // adding x axis to svg
+                svg3.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(x_axis);
+
+                // Add Y axis
+                var y = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([height, 0]);
+
+                var y_axis = d3.axisLeft(y)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format('~s'));   //setting tick format
+
+                //adding y axis to svg
+                svg3.append("g")
+                    .call(y_axis);
+
+                    var tooltip = d3.select("#secondVis")
+    .append("div")
+    .style("opacity", 1)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("padding", "10px");
+
+
+
+                // now append circle for each record in svg
+               map.forEach((data) => {
+                if (data.Fuel === "Electricity")
+                         svg3.append('g')
+                        .append("circle")
+                        .attr("cx", x(data.AverageCityMPG))
+                        .attr("cy", y(data.AverageHighwayMPG))
+                        .attr("r", 2 + data.EngineCylinder)
+                        .attr("averageCityMPG", data.AverageCityMPG)
+                        .attr("averageHighwayMPG", data.AverageHighwayMPG)
+                        .attr("engineCylinders", data.EngineCylinder )
+                        .on("mouseover", mouseoverE)
+                        .on("mousemove", mousemoveE)
+                        .on("mouseleave", mouseleaveE)
+                        
+                })
+
+
+
+                var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+                    width = 200,
+                    height = 200;
+
+                // select svg element
+                var svg4 = d3.select("#finalVis")
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+                // Add X axis
+                var x = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([0, width]);
+
+                var x_axis = d3.axisBottom(x)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format("~s"));   //setting tick format
+
+                // adding x axis to svg
+                svg4.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(x_axis);
+
+                // Add Y axis
+                var y = d3.scaleLog()   //setting logarithmic scale
+                    .domain([10, 150])  //setting domain
+                    .range([height, 0]);
+
+                var y_axis = d3.axisLeft(y)
+                    .tickValues([10, 20, 50, 100])  //setting tick values
+                    .tickFormat(d3.format('~s'));   //setting tick format
+
+                //adding y axis to svg
+                svg4.append("g")
+                    .call(y_axis);
+
+                    var tooltip = d3.select("#finalVis")
+    .append("div")
+    .style("opacity", 1)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("padding", "10px");
+
+
+
+                // now append circle for each record in svg
+               map.forEach((data) => {
+                
+                         svg4.append('g')
+                        .append("circle")
+                        .attr("cx", x(data.AverageCityMPG))
+                        .attr("cy", y(data.AverageHighwayMPG))
+                        .attr("r", 2 + data.EngineCylinder)
+                        .attr("averageCityMPG", data.AverageCityMPG)
+                        .attr("averageHighwayMPG", data.AverageHighwayMPG)
+                        .attr("engineCylinders", data.EngineCylinder )
+                        .attr("fuel", data.Fuel)
+                        .attr("make", data.Make)
+                        .on("mouseover", mouseoverA)
+                        .on("mousemove", mousemoveA)
+                        .on("mouseleave", mouseleaveA)
+                        
                 })
 }
+
+function enableToolTip() {
+document.getElementById("toolTip").style.display = "block"
+}
+function enableToolTipTwo() {
+document.getElementById("toolTipTwo").style.display = "block"
+}
+
+function enableToolTipThree() {
+document.getElementById("toolTipThree").style.display = "block"
+}
+
+function enableToolTipFour() {
+document.getElementById("toolTipFour").style.display = "block"
+}
+
+
+
 </script>
+<div class="container">
+    <h1>Don't trust a car salesman, even if he knows d3.js</h1>
+
+    <svg width=300 height=300></svg>
+
+<button onclick="enableToolTip()">Click me for insight!</button>
+<p style="display: none; text-align: center;" id="toolTip">This is a graph of the fuel economy of various cars, with the radii of the circles being generated by the amount of cylinders are in the engine of the vehicle. If you're in the market for a new car, this graph can help you decide, but there's still a lot you don't know. <br> As you can see, there seems to be an amount of outliers. Let's examine the concentrated amount of car models first.</p>
+
+
+
+<svg id="secondVis" width=300 height="300"></svg>
+<p>Hover over the points to get some more information.</p>
+<button onclick="enableToolTipTwo()">Click me for insight!</button>
+<p style="display: none; text-align: center;" id="toolTipTwo">From this graph and the data provided by hovering over it, one can draw the conclusion that the less cylinders in your car, the more fuel efficient it is. And if you're looking for a car with good mileage, the model that has the least amount of cylinders should be the car to buy...right? <br> Let's take a look at our outliers that should be our best cars to buy.</p>
+<p>City Mpg: <p id="cityMPG"></p> </p>
+<p>Highway Mpg: <p id="highwayMPG"></p> </p>
+<p>Engine Cylinders: <p id="engineCylinder"></p> </p>
+
+<svg id="thirdVis" width=300  height=300></svg>
+
+<p>Hover over the points to get some more information.</p>
+<button onclick="enableToolTipThree()">Click me for insight!</button>
+<p style="display: none; text-align: center;" id="toolTipThree">As we can see, this works for the most part! These cars have amazing mileage, but the data also shows they have zero engine cylinders. Now even if you are not an auto mechanic or Mechanical Engineer, you probably know that's impossible for combustion engines. So we know there is something this data visualization is not telling us.</p>
+
+<p>City Mpg: <p id="cityMPGE"></p> </p>
+<p>Highway Mpg: <p id="highwayMPGE"></p> </p>
+<p>Engine Cylinders: <p id="engineCylinderE"></p> </p>
+
+
+
+<svg id="finalVis" width=300  height=300></svg>
+
+<p>Hover over the points to get some more information.</p>
+<button onclick="enableToolTipFour()">Click me for insight!</button>
+<p style="display: none; text-align: center;" id="toolTipFour">Now we have the full picture! The cars with the great mileage are all electric. Now, still this isn't completely comprehensive, as electric cars have a mileage unit called "MPGe" which is calculated a little different from MPG, and this still doesn't include model and vehicle class, but it still allows for a better understanding of the car you'd like to buy.</p>
+
+<p>City Mpg: <p id="cityMPGA"></p> </p>
+<p>Highway Mpg: <p id="highwayMPGA"></p> </p>
+<p>Engine Cylinders: <p id="engineCylinderA"></p> </p>
+<p>Fuel: <p id="fuel"></p> </p>
+<p>Make: <p id="make"></p> </p>
+<p> There are a lot of factors to consider when purchasing a vehicle, so it's great to know all the information. However, with some ignorance on a buyer's part and some "suggestion" from a salesman, your opinion can be swayed by a data visualization. So the lesson of our narrative is this: Trust but Verify.</p>
+
+
+</div>
+
+
+
 </body>
 </html>
